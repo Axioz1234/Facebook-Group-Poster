@@ -1,6 +1,7 @@
 import time
 import json
 import os
+import tempfile
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -30,17 +31,22 @@ def main():
     # Parse comma-separated group URLs
     groups = [grp.strip() for grp in groups_input.split(",") if grp.strip()]
 
-    # Set up Chrome options without using the --user-data-dir flag
+    # Set up Chrome options
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--incognito")
-    # Note: Removed the --user-data-dir argument to avoid conflicts.
+    
+    # Create a unique temporary directory for Chrome's user data
+    temp_user_data_dir = tempfile.mkdtemp()
+    chrome_options.add_argument(f"--user-data-dir={temp_user_data_dir}")
+    
+    # Set preferences (disable notifications)
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
-    # Initialize the Chrome driver
+    # Initialize the Chrome driver with our options
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.facebook.com")
 
