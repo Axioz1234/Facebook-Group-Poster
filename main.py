@@ -1,6 +1,7 @@
 import time
 import json
 import os
+import tempfile
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -30,13 +31,15 @@ def main():
     # Parse comma-separated group URLs
     groups = [grp.strip() for grp in groups_input.split(",") if grp.strip()]
 
-    # Set up Chrome options with a unique user-data-dir to avoid conflicts
+    # Set up Chrome options with a unique temporary user-data-dir
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--incognito")
-    chrome_options.add_argument("--user-data-dir=/tmp/chrome-user-data")
+    # Generate a unique temporary directory for user data
+    temp_user_data_dir = tempfile.mkdtemp()
+    chrome_options.add_argument(f"--user-data-dir={temp_user_data_dir}")
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
