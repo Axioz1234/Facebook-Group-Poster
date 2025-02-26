@@ -1,7 +1,6 @@
 import time
 import json
 import os
-import tempfile
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -31,15 +30,13 @@ def main():
     # Parse comma-separated group URLs
     groups = [grp.strip() for grp in groups_input.split(",") if grp.strip()]
 
-    # Set up Chrome options with a unique temporary user-data-dir
+    # Set up Chrome options without using the --user-data-dir flag
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--incognito")
-    # Generate a unique temporary directory for user data
-    temp_user_data_dir = tempfile.mkdtemp()
-    chrome_options.add_argument(f"--user-data-dir={temp_user_data_dir}")
+    # Note: Removed the --user-data-dir argument to avoid conflicts.
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
@@ -47,7 +44,7 @@ def main():
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.facebook.com")
 
-    # Login using email/username and password
+    # Log in to Facebook
     driver.find_element(By.XPATH, '//*[@id="email"]').send_keys(account)
     pass_elem = driver.find_element(By.XPATH, '//*[@id="pass"]')
     pass_elem.send_keys(password)
@@ -84,7 +81,7 @@ def postingProcess(group, driver, message, counter):
 
     goingToPostLayout(driver)
     time.sleep(0.5)
-    # Wait until the post box is available
+    # Wait for the post box to be available
     while True:
         try:
             post_box = driver.find_element(By.XPATH, "//div[@data-block='true']//div")
@@ -92,7 +89,7 @@ def postingProcess(group, driver, message, counter):
         except Exception:
             time.sleep(1)
     post_box.send_keys(message)
-    # Click the post button; XPath may require adjustments
+    # Click the post button (XPath might need adjustments)
     driver.find_element(By.XPATH, "//div[contains(@aria-label, 'Post')]").click()
     print("Posting on", group)
     time.sleep(1)
