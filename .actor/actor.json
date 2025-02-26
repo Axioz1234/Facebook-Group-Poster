@@ -1,0 +1,55 @@
+{
+	"actorSpecification": 1,
+	"name": "facebook-group-poster",
+	"version": "0.1",
+	"title": "Facebook Group Auto Poster",
+	"description": "This actor posts messages to Facebook groups using Selenium. Cookie-based login is disabled; it logs in using Username and Password.",
+	"input": {
+	  "title": "Facebook Group Auto Poster",
+	  "type": "object",
+	  "schemaVersion": 1,
+	  "properties": {
+		"Facebook_Profile_URL": {
+		  "title": "Facebook Group URL List (Comma-separated)",
+		  "type": "string",
+		  "description": "List of Facebook group URLs separated by commas.",
+		  "editor": "textarea",
+		  "default": "https://www.facebook.com/groups/825095794282007, https://www.facebook.com/groups/1478593245698376"
+		},
+		"Message": {
+		  "title": "Enter Your Message",
+		  "type": "string",
+		  "description": "The text content of the post.",
+		  "editor": "textarea",
+		  "default": "Your message here"
+		},
+		"Delay": {
+		  "title": "Delay (Seconds)",
+		  "type": "integer",
+		  "description": "Delay between posts (in seconds).",
+		  "default": 15
+		},
+		"Username": {
+		  "title": "Facebook Username (Optional)",
+		  "type": "string",
+		  "description": "Your Facebook account username or email. Used if cookies are not provided.",
+		  "editor": "textfield",
+		  "default": ""
+		},
+		"Password": {
+		  "title": "Facebook Password (Optional)",
+		  "type": "string",
+		  "description": "Your Facebook account password. Used if cookies are not provided.",
+		  "editor": "textfield",
+		  "isSecret": true
+		}
+	  },
+	  "required": [
+		"Facebook_Profile_URL",
+		"Message"
+	  ]
+	},
+	"main": "main.py",
+	"dockerRunCommand": "python main.py"
+  }
+  
